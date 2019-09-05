@@ -19,7 +19,7 @@ public class CharacterControl : MonoBehaviour
   public float GroundDistanceThreshold = 0.3f;
   public float CubeDistanceThreshold = 0.3f;
 
-    void Start()
+  void Start()
   {
     animator = GetComponent<Animator>();
     rigidbody = GetComponent<Rigidbody>();
@@ -44,8 +44,8 @@ public class CharacterControl : MonoBehaviour
     bool crouched = IsCrouch();
     animator.SetBool(Crouch, crouched);
 
-    bool need_up = IsFrontEmpty();
-    animator.SetBool(Free, need_up);
+    //bool need_up = IsFrontEmpty();
+    //animator.SetBool(Free, need_up);
 
     }
 
@@ -55,25 +55,6 @@ public class CharacterControl : MonoBehaviour
     Vector3 direction = Vector3.down;
     return Physics.Raycast(origin, direction, GroundDistanceThreshold, GroundLayer);
   }
-
-    bool IsFrontEmpty()
-    {
-        //RaycastHit hit;
-        //Ray ray = MainCamera.ScreenPointToRay(Input.mousePosition);
-
-        //if (Physics.Raycast(ray, out hit))
-        //{
-        //    Transform objectHit = hit.transform;
-        //    Debug.Log("objectHit - "+ objectHit.name);
-        //    // Do something with the object that was hit by the raycast.
-        //}
-
-        Vector3 origin = MainCamera.ScreenPointToRay();;
-        Vector3 direction = Vector3.forward;
-        Debug.DrawRay(origin, direction, Color.green, 5);
-        return Physics.Raycast(origin, direction, CubeDistanceThreshold, GroundLayer);
-
-    }
 
     bool IsCrouch()
     {
