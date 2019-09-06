@@ -25,4 +25,5 @@ public class ScoreCounter : MonoBehaviour
     {
         label.text = $"{score} point(s)";
     }
+
 }

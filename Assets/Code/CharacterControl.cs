@@ -29,6 +29,9 @@ public class CharacterControl : MonoBehaviour
   {
     var v = Input.GetAxis("Vertical");
     var h = Input.GetAxis("Horizontal");
+        //v = Easing.QuadraticEaseOut(v);
+        //h = Easing.ExponentialEaseOut(h);
+
     animator.SetFloat(Speed, v);
     animator.SetFloat(TurningSpeed, h);
 

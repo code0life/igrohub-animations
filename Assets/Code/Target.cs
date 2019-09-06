@@ -3,22 +3,20 @@
 public class Target : MonoBehaviour
 {
    Animator animator;
+   public GameObject deadPfx;
+   public GameObject idlePfx;
 
-  void OnTriggerEnter(Collider other)
+   //GameObject idleObjPfx;
+
+    void OnTriggerEnter(Collider other)
   {
     bool is_player = other.gameObject.GetComponent<CharacterControl>() != null;
     if(is_player)
     {
       AddScore();
-      Destroy(gameObject);
+      GetObject();
     }
   }
-
-
-    void AddScore()
-    {
-    GameObject.FindObjectOfType<ScoreCounter>().Add(1);
-    }
 
     void Start()
     {
@@ -26,20 +24,26 @@ public class Target : MonoBehaviour
         if (animator != null)
         {
             animator.enabled = true;
-            //i//f (animator.runtimeAnimatorController != null)
-            //{
-                animator.Play("SpawnTarget");
-                Debug.Log("Start");
-            //}
+            animator.Play("SpawnTarget");
+            //idleObjPfx = Instantiate(idlePfx, transform.position, transform.rotation);
 
         }
 
-        //transform.Rotate(Vector3.forward * Random.Range(10.0f, 30.0f) * Time.deltaTime);
     }
 
     void Update()
     {
-        //transform.Rotate(Vector3.forward * Random.Range(10.0f, 30.0f) * Time.deltaTime);
-        //transform.Rotate(Vector3.left * Random.Range(10.0f, 30.0f) * Time.deltaTime);
     }
+
+    void AddScore()
+    {
+        GameObject.FindObjectOfType<ScoreCounter>().Add(1);
+    }
+
+    void GetObject()
+    {
+        GameObject.FindObjectOfType<Interface>().Delivery(gameObject);
+        Destroy(gameObject);
+    }
+
 }
