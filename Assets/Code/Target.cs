@@ -6,7 +6,7 @@ public class Target : MonoBehaviour
    public GameObject deadPfx;
    public GameObject idlePfx;
 
-   //GameObject idleObjPfx;
+    //GameObject idleObjPfx;
 
     void OnTriggerEnter(Collider other)
   {
@@ -38,6 +38,7 @@ public class Target : MonoBehaviour
     void AddScore()
     {
         GameObject.FindObjectOfType<ScoreCounter>().Add(1);
+
     }
 
     void GetObject()

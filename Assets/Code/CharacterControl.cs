@@ -17,23 +17,57 @@ public class CharacterControl : MonoBehaviour
   public float JumpForce = 500;
   public LayerMask GroundLayer;
   public float GroundDistanceThreshold = 0.3f;
-  public float CubeDistanceThreshold = 0.3f;
+    //public float CubeDistanceThreshold = 0.3f;
 
-  void Start()
+    private float slidingH;
+    private float slidingV;
+
+    void Start()
   {
     animator = GetComponent<Animator>();
     rigidbody = GetComponent<Rigidbody>();
   }
 
+    void FixedUpdate()
+    {
+        //float h = 0f;
+        //float v = 0f;
+        Vector2 smoothedInput;
+
+        //var v = Input.GetAxis("Vertical") * sensitivity * Time.deltaTime;
+        //var h = Input.GetAxis("Horizontal") * sensitivity * Time.deltaTime;
+        var v = Input.GetAxis("Vertical");
+        var h = Input.GetAxis("Horizontal");
+
+        smoothedInput = SmoothInput(h, v);
+
+        h = smoothedInput.x;
+        v = smoothedInput.y;
+
+
+        animator.SetFloat(Speed, v);
+        animator.SetFloat(TurningSpeed, h);
+    }
+
+    private Vector2 SmoothInput(float targetH, float targetV)
+    {
+        float sensitivity = 3f;
+        float deadZone = 0.001f;
+
+        slidingH = Mathf.MoveTowards(slidingH,
+                      targetH, sensitivity * Time.deltaTime);
+
+        slidingV = Mathf.MoveTowards(slidingV,
+                      targetV, sensitivity * Time.deltaTime);
+
+        return new Vector2(
+               (Mathf.Abs(slidingH) < deadZone) ? 0f : slidingH,
+               (Mathf.Abs(slidingV) < deadZone) ? 0f : slidingV);
+    }
+
   void Update()
   {
-    var v = Input.GetAxis("Vertical");
-    var h = Input.GetAxis("Horizontal");
-        //v = Easing.QuadraticEaseOut(v);
-        //h = Easing.ExponentialEaseOut(h);
 
-    animator.SetFloat(Speed, v);
-    animator.SetFloat(TurningSpeed, h);
 
     bool grounded = IsOnTheGround();
     animator.SetBool(Grounded, grounded);
