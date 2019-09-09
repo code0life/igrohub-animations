@@ -2,40 +2,38 @@ using UnityEngine;
 
 public class CharacterControl : MonoBehaviour
 {
-  Animator animator;
-  Rigidbody rigidbody;
-  
-  static readonly int Speed = Animator.StringToHash("Speed");
-  static readonly int TurningSpeed = Animator.StringToHash("TurningSpeed");
-  static readonly int Grounded = Animator.StringToHash("Grounded");
-  static readonly int Jump = Animator.StringToHash("Jump");
-  static readonly int Crouch = Animator.StringToHash("Crouch");
-  static readonly int Free = Animator.StringToHash("Free");
+    Rigidbody m_Rigidbody;
+    Animator m_Animator;
+    CapsuleCollider m_Capsule;
 
-  public Camera MainCamera;
+    static readonly int Speed = Animator.StringToHash("Speed");
+    static readonly int TurningSpeed = Animator.StringToHash("TurningSpeed");
+    static readonly int Grounded = Animator.StringToHash("Grounded");
+    static readonly int Jump = Animator.StringToHash("Jump");
+    static readonly int Crouch = Animator.StringToHash("Crouch");
+    static readonly int Free = Animator.StringToHash("Free");
 
-  public float JumpForce = 500;
-  public LayerMask GroundLayer;
-  public float GroundDistanceThreshold = 0.3f;
+    public Camera MainCamera;
+
+    public float JumpForce = 500;
+    public LayerMask GroundLayer;
+    public float GroundDistanceThreshold = 0.3f;
     //public float CubeDistanceThreshold = 0.3f;
 
     private float slidingH;
     private float slidingV;
 
     void Start()
-  {
-    animator = GetComponent<Animator>();
-    rigidbody = GetComponent<Rigidbody>();
-  }
+    {
+        m_Animator = GetComponent<Animator>();
+        m_Rigidbody = GetComponent<Rigidbody>();
+        m_Capsule = GetComponent<CapsuleCollider>();
+    }
 
     void FixedUpdate()
     {
-        //float h = 0f;
-        //float v = 0f;
         Vector2 smoothedInput;
 
-        //var v = Input.GetAxis("Vertical") * sensitivity * Time.deltaTime;
-        //var h = Input.GetAxis("Horizontal") * sensitivity * Time.deltaTime;
         var v = Input.GetAxis("Vertical");
         var h = Input.GetAxis("Horizontal");
 
@@ -45,8 +43,8 @@ public class CharacterControl : MonoBehaviour
         v = smoothedInput.y;
 
 
-        animator.SetFloat(Speed, v);
-        animator.SetFloat(TurningSpeed, h);
+        m_Animator.SetFloat(Speed, v);
+        m_Animator.SetFloat(TurningSpeed, h);
     }
 
     private Vector2 SmoothInput(float targetH, float targetV)
@@ -70,16 +68,16 @@ public class CharacterControl : MonoBehaviour
 
 
     bool grounded = IsOnTheGround();
-    animator.SetBool(Grounded, grounded);
+        m_Animator.SetBool(Grounded, grounded);
 
     if(Input.GetButtonDown("Jump") && grounded)
     {
-      rigidbody.AddForce(JumpForce * Vector3.up);
-      animator.SetTrigger(Jump);
+        m_Rigidbody.AddForce(JumpForce * Vector3.up);
+        m_Animator.SetTrigger(Jump);
     }
 
     bool crouched = IsCrouch();
-    animator.SetBool(Crouch, crouched);
+    m_Animator.SetBool(Crouch, crouched);
 
     //bool need_up = IsFrontEmpty();
     //animator.SetBool(Free, need_up);
