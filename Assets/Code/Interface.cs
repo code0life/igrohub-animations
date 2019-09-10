@@ -37,7 +37,7 @@ public class Interface : MonoBehaviour
         //Vector3 pos_end = pointDelivery.transform.position;
 
         Vector3 thePosition;
-        thePosition = pos_start.InverseTransformPoint(mainInterface.transform.position + Vector3.up * 120);
+        thePosition = pos_start.InverseTransformPoint(mainInterface.transform.position);
 
         clone = Instantiate(simpleObj, thePosition, transform.rotation);
         clone.SetActive(true);
