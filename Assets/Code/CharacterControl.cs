@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class CharacterControl : MonoBehaviour
 {
@@ -15,18 +16,20 @@ public class CharacterControl : MonoBehaviour
 
     public GameObject MainCamera;
 
-    private bool btnJump;
-    private bool btnCrouch;
+    public bool btnJump;
+    public bool btnCrouch;
 
-    private bool jumpState;
-    private bool crouchState;
-    private bool blockJump;
+    public bool jumpState;
+    public bool crouchState;
+    public bool blockJump;
 
     private Vector3 moveVector;
     private bool isGrounded;
+    private Vector3 moveGroundNormal;
 
-    public float JumpForce = 350;
+    public float JumpForce = 10f;
     public LayerMask GroundLayer;
+    public float ConstGroundDistanceThreshold = 0.3f;
     public float GroundDistanceThreshold = 0.3f;
 
     const float half = 0.5f;
@@ -103,9 +106,27 @@ public class CharacterControl : MonoBehaviour
 
     bool IsOnTheGround()
     {
-        Vector3 origin = transform.position + 0.1f * Vector3.forward;
+        RaycastHit hit;
+        bool is_ground;
+
+        //Vector3 origin = transform.position + 0.1f * Vector3.forward;
+        Vector3 origin = transform.position + (Vector3.up * 0.1f);
         Vector3 direction = Vector3.down;
-        return Physics.Raycast(origin, direction, GroundDistanceThreshold, GroundLayer);
+
+        if (Physics.Raycast(origin, direction, out hit, GroundDistanceThreshold))
+        {
+            moveGroundNormal = hit.normal;
+            is_ground = true;
+            animator.applyRootMotion = true;
+        }
+        else
+        {
+            is_ground = false;
+            moveGroundNormal = Vector3.up;
+            animator.applyRootMotion = false;
+        }
+
+        return is_ground;
     }
 
     bool IsCrouch()
@@ -125,6 +146,7 @@ public class CharacterControl : MonoBehaviour
     {
 
         moveVector = v * Vector3.forward + h * Vector3.right;
+        moveVector = Vector3.ProjectOnPlane(moveVector, moveGroundNormal);
         CapsuleScale();
         JumpState();
 
@@ -134,24 +156,51 @@ public class CharacterControl : MonoBehaviour
 
     void JumpState()
     {
-        if (isGrounded & btnJump)
+
+        if (isGrounded & !blockJump)
         {
-            if (jumpState) return;
-            //rigidbody.AddForce(JumpForce * Vector3.up);
-            jumpState = true;
+            if (btnJump && (animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion") || animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch")) )
+            {
+                Debug.Log("JumpState Locomotion - " + animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"));
+                //if (jumpState) return;
+                rigidbody.AddForce(JumpForce * Vector3.up);
+                //rigidbody.velocity = new Vector3(rigidbody.velocity.x/2, JumpForce, rigidbody.velocity.z / 2);
+                jumpState = true;
+                //GroundDistanceThreshold = rigidbody.velocity.y < 0 ? ConstGroundDistanceThreshold : 0.01f;
+
+            }
+            else
+            {
+                Vector3 extraGravityForce = (Physics.gravity * 2f) - Physics.gravity;
+                rigidbody.AddForce(extraGravityForce);
+                jumpState = false;
+                //GroundDistanceThreshold = 0.3f;
+                //StartCoroutine(BlockJumpAfterJump());
+            }
         }
-        else
-        {
-            jumpState = false;
-        }
+
+        //if (isGrounded & btnJump & !blockJump)
+        //{
+        ////    Debug.Log("JumpState");
+
+        //    if (jumpState) return;
+        //    rigidbody.AddForce(JumpForce * Vector3.up);
+        //    jumpState = true;
+        //    //blockJump = true;
+        ////    Debug.Log("JumpState - " + jumpState);
+        //}
+        //else
+        //{
+        //    if (!jumpState) return;
+        //    jumpState = false;
+        //    Debug.Log("JumpState - " + jumpState);
+
+        //}
+
     }
 
     void UpdateAnimation(Vector3 move)
     {
-        //m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
-        //m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
-        //m_Animator.SetBool("Crouch", m_Crouching);
-        //m_Animator.SetBool("OnGround", m_IsGrounded);
         animator.SetFloat(Speed, move.z);
         animator.SetFloat(TurningSpeed, move.x);
         animator.SetBool(Crouch, crouchState);
@@ -175,12 +224,23 @@ public class CharacterControl : MonoBehaviour
             if (Physics.SphereCast(cRay, capsule.radius * half, cRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
             {
                 crouchState = true;
+                blockJump = true;
                 return;
             }
             capsule.height = capsuleHeight;
             capsule.center = capsuleCenter;
             crouchState = false;
+            blockJump = false;
         }
     }
+
+    //IEnumerator BlockJumpAfterJump()
+    //{
+    //    blockJump = true;
+    //    Debug.Log("BlockJumpAfterJump - " + blockJump);
+    //    yield return new WaitForSeconds(1);
+    //    blockJump = false;
+    //    Debug.Log("BlockJumpAfterJump - " + blockJump);
+    //}
 
 }
