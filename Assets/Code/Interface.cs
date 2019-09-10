@@ -33,16 +33,13 @@ public class Interface : MonoBehaviour
 
     public void Delivery(GameObject _obj)
     {
-        Vector3 pos_start = _obj.transform.position;
+        Transform pos_start = _obj.transform;
         //Vector3 pos_end = pointDelivery.transform.position;
 
         Vector3 thePosition;
-        thePosition = transform.TransformDirection(pos_start);
-        //Vector3 theEndPosition;
-        //theEndPosition = transform.TransformDirection(pos_end);
-        //theEndPosition = pos_end;
+        thePosition = pos_start.InverseTransformPoint(mainInterface.transform.position + Vector3.up * 120);
 
-        clone = Instantiate(simpleObj, simpleObj.transform.position, transform.rotation);
+        clone = Instantiate(simpleObj, thePosition, transform.rotation);
         clone.SetActive(true);
         clone.transform.SetParent(mainInterface.transform, true);
         clone.gameObject.GetComponent<Delivery>().GoToCount();

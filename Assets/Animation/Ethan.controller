@@ -339,7 +339,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 1
+    m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: Crouch
     m_Type: 4
@@ -820,13 +820,13 @@ AnimatorStateMachine:
   - {fileID: 1101296106480632814}
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: -6287036737355371246}
+    second:
+    - {fileID: 6519463024873079629}
   - first: {fileID: 1107532540019801012}
     second:
     - {fileID: 6242664892205308741}
     - {fileID: 6218142780891858575}
-  - first: {fileID: -6287036737355371246}
-    second:
-    - {fileID: 6519463024873079629}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 110, y: 30, z: 0}
   m_EntryPosition: {x: 320, y: 30, z: 0}

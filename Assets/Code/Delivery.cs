@@ -72,15 +72,8 @@ public class Delivery : MonoBehaviour
 
             //tfm.position = pos + transform.up * Mathf.Sin(Time.time * 20f) * 0.5f; 
             //Debug.Log("tfmEnd.position.y - " + tfmEnd.position.y);
-            if (t > 0.65)
-            {
-                tfm.position = tfmEnd.position;
-            }
-            else
-            {
-                pos = pos + Vector3.up * Mathf.Sin(Time.deltaTime * -20f) * 20.0f;
-                tfm.position = pos;
-            }
+            pos = pos + Vector3.up * Mathf.Sin(Time.deltaTime * -20f) * 20.0f;
+            tfm.position = pos;
 
             yield return null;
         }
