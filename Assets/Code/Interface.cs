@@ -6,8 +6,11 @@ public class Interface : MonoBehaviour
 {
     public Camera mainCamera;
     public GameObject mainInterface;
+    public Canvas canvas;
     public GameObject pointDelivery;
     public GameObject simpleObj;
+
+    Vector3 Offset = Vector3.zero;
 
     GameObject clone;
 
@@ -21,28 +24,26 @@ public class Interface : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (animator != null)
-        //{
-        //    if (animator.GetBool(Animated))
-        //    {
-        //        animator.SetBool(Animated, false);
-        //    }
-
-        //}
     }
 
     public void Delivery(GameObject _obj)
     {
-        Transform pos_start = _obj.transform;
-        //Vector3 pos_end = pointDelivery.transform.position;
-
-        Vector3 thePosition;
-        thePosition = pos_start.InverseTransformPoint(mainInterface.transform.position);
-
-        clone = Instantiate(simpleObj, thePosition, transform.rotation);
+        clone = Instantiate(simpleObj, _obj.transform.position, Quaternion.identity);
         clone.SetActive(true);
+
         clone.transform.SetParent(mainInterface.transform, true);
+        clone.transform.position = worldToUISpace(canvas, _obj.transform.position);
+        Offset = clone.transform.position - worldToUISpace(canvas, _obj.transform.position);
         clone.gameObject.GetComponent<Delivery>().GoToCount();
+    }
+
+    public Vector3 worldToUISpace(Canvas canvas, Vector3 worldPos)
+    {
+        Vector3 screenPos = mainCamera.WorldToScreenPoint(worldPos);
+        Vector2 movePos;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, screenPos, canvas.worldCamera, out movePos);
+        return canvas.transform.TransformPoint(movePos);
     }
 
 }
