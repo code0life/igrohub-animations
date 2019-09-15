@@ -12,7 +12,6 @@ public class CharacterControl : MonoBehaviour
     static readonly int Grounded = Animator.StringToHash("Grounded");
     static readonly int Jump = Animator.StringToHash("Jump");
     static readonly int Crouch = Animator.StringToHash("Crouch");
-    //static readonly int Free = Animator.StringToHash("Free");
 
     public GameObject MainCamera;
 
@@ -88,19 +87,6 @@ public class CharacterControl : MonoBehaviour
         btnJump = Input.GetButtonDown("Jump");
         btnCrouch = Input.GetKey(KeyCode.C);
         isGrounded = IsOnTheGround();
-        //    m_Animator.SetBool(Grounded, grounded);
-
-        //if(Input.GetButtonDown("Jump") && grounded)
-        //{
-        //    m_Rigidbody.AddForce(JumpForce * Vector3.up);
-        //    m_Animator.SetTrigger(Jump);
-        //}
-
-        //bool crouched = IsCrouch();
-        //m_Animator.SetBool(Crouch, crouched);
-
-        //bool need_up = IsFrontEmpty();
-        //animator.SetBool(Free, need_up);
 
     }
 
@@ -109,7 +95,6 @@ public class CharacterControl : MonoBehaviour
         RaycastHit hit;
         bool is_ground;
 
-        //Vector3 origin = transform.position + 0.1f * Vector3.forward;
         Vector3 origin = transform.position + (Vector3.up * 0.1f);
         Vector3 direction = Vector3.down;
 
@@ -132,7 +117,6 @@ public class CharacterControl : MonoBehaviour
     bool IsCrouch()
     {
         bool flag = false;
-        //bool grounded = IsOnTheGround();
 
         if (Input.GetButton("Crouch"))
         {
@@ -161,41 +145,16 @@ public class CharacterControl : MonoBehaviour
         {
             if (btnJump && (animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion") || animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch")) )
             {
-                Debug.Log("JumpState Locomotion - " + animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"));
-                //if (jumpState) return;
                 rigidbody.AddForce(JumpForce * Vector3.up);
-                //rigidbody.velocity = new Vector3(rigidbody.velocity.x/2, JumpForce, rigidbody.velocity.z / 2);
                 jumpState = true;
-                //GroundDistanceThreshold = rigidbody.velocity.y < 0 ? ConstGroundDistanceThreshold : 0.01f;
-
             }
             else
             {
                 Vector3 extraGravityForce = (Physics.gravity * 2f) - Physics.gravity;
                 rigidbody.AddForce(extraGravityForce);
                 jumpState = false;
-                //GroundDistanceThreshold = 0.3f;
-                //StartCoroutine(BlockJumpAfterJump());
             }
         }
-
-        //if (isGrounded & btnJump & !blockJump)
-        //{
-        ////    Debug.Log("JumpState");
-
-        //    if (jumpState) return;
-        //    rigidbody.AddForce(JumpForce * Vector3.up);
-        //    jumpState = true;
-        //    //blockJump = true;
-        ////    Debug.Log("JumpState - " + jumpState);
-        //}
-        //else
-        //{
-        //    if (!jumpState) return;
-        //    jumpState = false;
-        //    Debug.Log("JumpState - " + jumpState);
-
-        //}
 
     }
 
@@ -233,14 +192,5 @@ public class CharacterControl : MonoBehaviour
             blockJump = false;
         }
     }
-
-    //IEnumerator BlockJumpAfterJump()
-    //{
-    //    blockJump = true;
-    //    Debug.Log("BlockJumpAfterJump - " + blockJump);
-    //    yield return new WaitForSeconds(1);
-    //    blockJump = false;
-    //    Debug.Log("BlockJumpAfterJump - " + blockJump);
-    //}
 
 }
