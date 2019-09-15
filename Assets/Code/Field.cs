@@ -8,7 +8,9 @@ public class Field : MonoBehaviour
     public Color ObstaclesColor;
     public Color TargetsColor;
     public uint ObstaclesCount;
-    
+
+    public PhysicMaterial TargetsMaterial;
+
     Vector3 ObstacleScale;
 
     public GameObject ObstaclePrefab;
@@ -46,6 +48,7 @@ public class Field : MonoBehaviour
         var target = Instantiate(TargetPrefab);
         SetColor(target, TargetsColor);
         target.transform.position = target_position;
+        //target.GetComponent<BoxCollider>().material = TargetsMaterial;
         return target;
     }
 
@@ -68,36 +71,6 @@ public class Field : MonoBehaviour
 
         return obstacle;
     }
-
-    //IEnumerator AnimateObstacleAppear(GameObject obstacle)
-    //{
-    //    const float duration = 2.0f;
-    //    float time_passed = 0.0f;
-
-    //    float target_y = obstacle.transform.position.y;
-    //    float start_y = target_y - 0.5f * ObstacleScale.y;
-
-    //    Transform tfm = obstacle.transform;
-        
-    //    while(time_passed < duration)
-    //    {
-    //        float t = time_passed / duration;
-    //        t = Easing.BackEaseOut(t);
-    //        t = Mathf.Max(t, 0.0f);
-
-    //        Vector3 scale = ObstacleScale;
-    //        scale.x *= t;
-    //        scale.z *= t;
-    //        tfm.localScale = scale;
-
-    //        Vector3 pos = tfm.position;
-    //        pos.y = Mathf.Lerp(start_y, target_y, t);
-    //        tfm.position = pos;
-
-    //        time_passed += Time.deltaTime;
-    //        yield return null;
-    //    }
-    //}
 
     static void SetColor(GameObject o, Color color)
     {

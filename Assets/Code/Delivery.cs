@@ -35,11 +35,6 @@ public class Delivery : MonoBehaviour
         duration = 1.5f;
         time_passed = 0.0f;
 
-        //var height = 3.2;
-        //var speed = 2.0;
-        ////var timingOffset = 0.0;
-        //var count = 0;
-
         Transform tfmEnd = pointDelivery.transform;
         tfmEnd.localScale.Set(1, 1, 1);
 
@@ -55,18 +50,8 @@ public class Delivery : MonoBehaviour
 
             time_passed += Time.deltaTime;
 
-            //var offset = Mathf.Sin((Time.time * speed) + timingOffset) * height / 2;
-
-            //count++;
-
-            //tfm.position = new Vector3(count, offset, 0);
-
             Vector3 pos = tfm.position;
             Vector3 scale = tfm.localScale;
-
-            //tfmEnd.position.y = Mathf.Sin(t);
-            //pos = pos + Vector3.up * Mathf.Sin(Time.deltaTime * 20f) * 0.5f;
-
 
             pos.x = Mathf.Lerp(tfmStart.position.x, tfmEnd.position.x, tEasing);
             pos.y = Mathf.Lerp(tfmStart.position.y, tfmEnd.position.y, tEasing);
@@ -76,8 +61,6 @@ public class Delivery : MonoBehaviour
             scale.y = Mathf.Lerp(tfmStart.localScale.y, tfmEnd.localScale.y, tEasing);
             scale.z = Mathf.Lerp(tfmStart.localScale.z, tfmEnd.localScale.z, tEasing);
 
-            //tfm.position = pos + transform.up * Mathf.Sin(Time.time * 20f) * 0.5f; 
-            //Debug.Log("tfmEnd.position.y - " + tfmEnd.position.y);
             pos = pos + Vector3.up * Mathf.Sin(Time.deltaTime * -20f) * 20.0f;
             tfm.position = pos;
             tfm.localScale = scale;

@@ -9,10 +9,12 @@ public class CameraFollow : MonoBehaviour
     Vector3 offset_tunnel_enter = new Vector3(0, 0.5f, -3);
 
     float fieldOfViewMax = 60;
+    float multiplyPos = 1;
+    float multiplyField = 1;
+
     public Camera cam;
 
     public float smooth = 0.3f;
-    //public GameObject target;//объект сопровождения
 
     public bool is_tunnel;
     public bool is_crouch;
@@ -30,6 +32,7 @@ public class CameraFollow : MonoBehaviour
     void LateUpdate()
     {
     }
+
     void FixedUpdate()
     {
         is_crouch = GetComponent<CharacterControl>().crouchState;
@@ -42,11 +45,16 @@ public class CameraFollow : MonoBehaviour
             {
                 offset_real = offset_tunnel_enter;
                 fieldOfViewMax = 30;
+                multiplyPos = 2;
+                multiplyField = 2;
             }
             else
             {
                 offset_real = offset_tunnel;
                 fieldOfViewMax = 70;
+                multiplyPos = 10;
+                multiplyField = 10;
+
             }
 
         }
@@ -54,17 +62,24 @@ public class CameraFollow : MonoBehaviour
         {
             offset_real = offset;
             fieldOfViewMax = 60;
+            multiplyPos = 1;
+            multiplyField = 1;
         }
         
         pos = transform.position +
                                     offset_real.z*transform.forward +
                                     offset_real.y*transform.up;
 
-        cam.transform.position = Vector3.Lerp(cam.transform.position, pos, smooth);
+        cam.transform.position = Vector3.Lerp(cam.transform.position, pos, smooth / multiplyPos);
 
-        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fieldOfViewMax, smooth);
+        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fieldOfViewMax, smooth / multiplyField);
 
         cam.transform.LookAt(transform);
+    }
+
+    public float GetOffset()
+    {
+        return fieldOfViewMax/60;
     }
 
     public void GoToTunnel()
